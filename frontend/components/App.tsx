@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { QBS, QB_MAP, ROUND_LABELS } from "@/lib/qbs";
 import { deriveBracket } from "@/lib/bracket";
 import { submitPick, Pick } from "@/lib/api";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import QBCard from "./QBCard";
 import BracketMap from "./BracketMap";
 import LeaderboardScreen from "./LeaderboardScreen";
@@ -65,7 +66,7 @@ export default function App() {
   const [view, setView] = useState<View>("game");
   const animLock = useRef(false);
 
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 600;
+  const isMobile = useIsMobile();
 
   // Hydrate from localStorage
   useEffect(() => {

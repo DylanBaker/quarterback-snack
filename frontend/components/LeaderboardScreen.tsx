@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { fetchLeaderboard, LeaderboardEntry } from "@/lib/api";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 interface Props {
   onBack: () => void;
 }
 
 export default function LeaderboardScreen({ onBack }: Props) {
+  const isMobile = useIsMobile();
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [totalMatchups, setTotalMatchups] = useState(0);
   const [expanded, setExpanded] = useState(false);
@@ -72,7 +74,7 @@ export default function LeaderboardScreen({ onBack }: Props) {
         <>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {visible.map(entry => (
-              <LeaderboardRow key={entry.qb_id} entry={entry} />
+              <LeaderboardRow key={entry.qb_id} entry={entry} isMobile={isMobile} />
             ))}
           </div>
 
@@ -116,7 +118,7 @@ export default function LeaderboardScreen({ onBack }: Props) {
   );
 }
 
-function LeaderboardRow({ entry }: { entry: LeaderboardEntry }) {
+function LeaderboardRow({ entry, isMobile }: { entry: LeaderboardEntry; isMobile: boolean }) {
   const isFirst = entry.rank === 1;
   const photoSize = isFirst ? 54 : 46;
 
@@ -227,7 +229,7 @@ function LeaderboardRow({ entry }: { entry: LeaderboardEntry }) {
       <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
         <div
           style={{
-            width: 110,
+            width: isMobile ? 60 : 110,
             height: 4,
             borderRadius: 999,
             background: "var(--progress-track)",
