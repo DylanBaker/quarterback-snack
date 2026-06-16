@@ -9,9 +9,17 @@ export interface Derived {
   rightId: number;
 }
 
-export function deriveBracket(picks: number[]): Derived {
-  // Round 0: all 32 seeds in order
-  const slots: BracketSlots = [Array.from({ length: 32 }, (_, i) => i)];
+export function shuffleSeeds(): number[] {
+  const seeds = Array.from({ length: 32 }, (_, i) => i);
+  for (let i = seeds.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [seeds[i], seeds[j]] = [seeds[j], seeds[i]];
+  }
+  return seeds;
+}
+
+export function deriveBracket(picks: number[], seeds: number[]): Derived {
+  const slots: BracketSlots = [seeds];
 
   let pickCursor = 0;
   // 5 rounds: 16, 8, 4, 2, 1 matchups

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { QBS, QB_MAP, ROUND_LABELS } from "@/lib/qbs";
-import { deriveBracket } from "@/lib/bracket";
+import { deriveBracket, shuffleSeeds } from "@/lib/bracket";
 import { submitPick, Pick } from "@/lib/api";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import QBCard from "./QBCard";
@@ -60,6 +60,7 @@ function Confetti() {
 
 export default function App() {
   const [picks, setPicks] = useState<number[]>([]);
+  const [seeds, setSeeds] = useState<number[]>(() => Array.from({ length: 32 }, (_, i) => i));
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [animPhase, setAnimPhase] = useState<AnimPhase>(null);
   const [animSide, setAnimSide] = useState<AnimSide>(null);
@@ -72,12 +73,20 @@ export default function App() {
   // Hydrate from localStorage
   useEffect(() => {
     const savedPicks = localStorage.getItem(`${STORE_KEY}_picks`);
+    const savedSeeds = localStorage.getItem(`${STORE_KEY}_seeds`);
     const savedTheme = localStorage.getItem(`${STORE_KEY}_theme`);
     if (savedPicks) setPicks(JSON.parse(savedPicks));
+    if (savedSeeds) {
+      setSeeds(JSON.parse(savedSeeds));
+    } else {
+      const newSeeds = shuffleSeeds();
+      setSeeds(newSeeds);
+      localStorage.setItem(`${STORE_KEY}_seeds`, JSON.stringify(newSeeds));
+    }
     if (savedTheme) setTheme(savedTheme as "light" | "dark");
   }, []);
 
-  // Persist picks
+  // Persist picks and seeds
   useEffect(() => {
     localStorage.setItem(`${STORE_KEY}_picks`, JSON.stringify(picks));
   }, [picks]);
@@ -89,8 +98,8 @@ export default function App() {
   }, [theme]);
 
   const { slots, roundIndex, matchIndex, phase, leftId, rightId } = useMemo(
-    () => deriveBracket(picks),
-    [picks]
+    () => deriveBracket(picks, seeds),
+    [picks, seeds]
   );
 
   const leftQB = QB_MAP.get(leftId)!;
@@ -129,10 +138,12 @@ export default function App() {
   );
 
   const reset = useCallback(() => {
+    const newSeeds = shuffleSeeds();
     setPicks([]);
+    setSeeds(newSeeds);
     setView("game");
-    // New session on reset so picks don't collide with old ones
     localStorage.removeItem(`${STORE_KEY}_session`);
+    localStorage.setItem(`${STORE_KEY}_seeds`, JSON.stringify(newSeeds));
     getSessionId();
   }, []);
 
