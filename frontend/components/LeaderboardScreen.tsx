@@ -160,6 +160,12 @@ function LeaderboardRow({ entry, isMobile }: { entry: LeaderboardEntry; isMobile
           overflow: "hidden",
         }}
       >
+        <img
+          src={`/photos/${entry.qb_id}.jpg`}
+          alt={entry.qb_name}
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }}
+          onError={e => { (e.target as HTMLImageElement).style.display = "none"; }}
+        />
         <div
           style={{
             position: "absolute",
@@ -168,6 +174,7 @@ function LeaderboardRow({ entry, isMobile }: { entry: LeaderboardEntry; isMobile
             alignItems: "flex-end",
             justifyContent: "center",
             paddingBottom: "8%",
+            zIndex: -1,
           }}
         >
           <div
