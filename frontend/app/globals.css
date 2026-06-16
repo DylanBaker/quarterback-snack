@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+:root {
+  --accent: #53C271;
+  --accent-text: #0c0c0e;
+
+  --page-bg: #f3f1ec;
+  --text: #16171b;
+  --text-muted: #84817a;
+  --text-faint: #9a968c;
+  --border: rgba(0,0,0,.07);
+  --border-faint: #d6d2c8;
+  --progress-track: #e9e5dc;
+  --line-done: #16171b;
+  --line-todo: #d6d2c8;
+  --card-bg: #ffffff;
+  --bracket-card-bg: #ffffff;
+  --champ-bg: #ffffff;
+  --pill-border: #16171b;
+
+  --card-surface: #ffffff;
+  --card-border: rgba(0,0,0,.08);
+  --photo-end: #ece9e1;
+  --silhouette: rgba(0,0,0,.13);
+  --chip-bg: rgba(255,255,255,.82);
+  --chip-text: #2a2924;
+  --name-color: #16171b;
+}
+
+[data-theme="dark"] {
+  --page-bg: #26282d;
+  --text: #f0eee9;
+  --text-muted: #9fa0a6;
+  --text-faint: #7c7d84;
+  --border: rgba(255,255,255,.09);
+  --border-faint: rgba(255,255,255,.16);
+  --progress-track: #3a3c42;
+  --line-done: #e6e3dd;
+  --line-todo: #4a4c53;
+  --card-bg: #2c2e34;
+  --bracket-card-bg: #2c2e34;
+  --champ-bg: #31333a;
+  --pill-border: #f0eee9;
+
+  --card-surface: #34363d;
+  --card-border: rgba(255,255,255,.09);
+  --photo-end: #24262b;
+  --silhouette: rgba(255,255,255,.14);
+  --chip-bg: rgba(18,19,23,.62);
+  --chip-text: #e9e9e6;
+  --name-color: #f0eee9;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  background: var(--page-bg);
+  color: var(--text);
+  font-family: 'Space Grotesk', sans-serif;
+  transition: background .25s, color .25s;
+}
+
+@keyframes qbIn {
+  from { opacity: 0; transform: translateY(22px) scale(.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes champPop {
+  0%   { opacity: 0; transform: scale(.82); }
+  60%  { transform: scale(1.04); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes confettiFall {
+  0%   { transform: translateY(0) rotate(0deg);    opacity: 1; }
+  100% { transform: translateY(640px) rotate(560deg); opacity: 0; }
+}
