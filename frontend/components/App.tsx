@@ -67,6 +67,7 @@ export default function App() {
   const animLock = useRef(false);
 
   const isMobile = useIsMobile();
+  const isPreview = typeof window !== "undefined" && new URLSearchParams(window.location.search).has("preview");
 
   // Hydrate from localStorage
   useEffect(() => {
@@ -114,8 +115,10 @@ export default function App() {
         setPicks(prev => [...prev, winnerId]);
         setAnimPhase(null);
         setAnimSide(null);
-        submitPick({ session_id: sessionId, round: roundIndex, winner_id: winnerId, loser_id: loserId })
-          .catch(console.error);
+        if (!isPreview) {
+          submitPick({ session_id: sessionId, round: roundIndex, winner_id: winnerId, loser_id: loserId })
+            .catch(console.error);
+        }
       }, 470);
 
       setTimeout(() => {
