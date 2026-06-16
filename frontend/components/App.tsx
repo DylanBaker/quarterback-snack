@@ -407,6 +407,28 @@ export default function App() {
           </div>
         </>
       )}
+
+      <footer
+        style={{
+          marginTop: 48,
+          textAlign: "center",
+          fontSize: 12,
+          color: "var(--text-faint)",
+          fontFamily: "Space Grotesk, sans-serif",
+          fontWeight: 500,
+        }}
+      >
+        Made in honour of{" "}
+        <a
+          href="https://www.theringer.com/podcasts/the-ringer-fantasy-football-show"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: "var(--accent)", textDecoration: "underline" }}
+        >
+          The Seven
+        </a>
+        .
+      </footer>
     </div>
   );
 }
