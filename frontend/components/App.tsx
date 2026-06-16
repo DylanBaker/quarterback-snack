@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { QBS, QB_MAP, ROUND_LABELS } from "@/lib/qbs";
 import { deriveBracket } from "@/lib/bracket";
-import { submitBracket, Pick } from "@/lib/api";
+import { submitPick, Pick } from "@/lib/api";
 import QBCard from "./QBCard";
 import BracketMap from "./BracketMap";
 import LeaderboardScreen from "./LeaderboardScreen";
@@ -59,12 +59,10 @@ function Confetti() {
 
 export default function App() {
   const [picks, setPicks] = useState<number[]>([]);
-  const [picksData, setPicksData] = useState<Pick[]>([]);
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [animPhase, setAnimPhase] = useState<AnimPhase>(null);
   const [animSide, setAnimSide] = useState<AnimSide>(null);
   const [view, setView] = useState<View>("game");
-  const [submitted, setSubmitted] = useState(false);
   const animLock = useRef(false);
 
   const isMobile = typeof window !== "undefined" && window.innerWidth < 600;
@@ -72,20 +70,15 @@ export default function App() {
   // Hydrate from localStorage
   useEffect(() => {
     const savedPicks = localStorage.getItem(`${STORE_KEY}_picks`);
-    const savedPicksData = localStorage.getItem(`${STORE_KEY}_picks_data`);
     const savedTheme = localStorage.getItem(`${STORE_KEY}_theme`);
-    const savedSubmitted = localStorage.getItem(`${STORE_KEY}_submitted`);
     if (savedPicks) setPicks(JSON.parse(savedPicks));
-    if (savedPicksData) setPicksData(JSON.parse(savedPicksData));
     if (savedTheme) setTheme(savedTheme as "light" | "dark");
-    if (savedSubmitted) setSubmitted(true);
   }, []);
 
   // Persist picks
   useEffect(() => {
     localStorage.setItem(`${STORE_KEY}_picks`, JSON.stringify(picks));
-    localStorage.setItem(`${STORE_KEY}_picks_data`, JSON.stringify(picksData));
-  }, [picks, picksData]);
+  }, [picks]);
 
   // Apply theme
   useEffect(() => {
@@ -101,18 +94,6 @@ export default function App() {
   const leftQB = QB_MAP.get(leftId)!;
   const rightQB = QB_MAP.get(rightId)!;
 
-  // Submit bracket once complete
-  useEffect(() => {
-    if (phase === "champion" && !submitted && picksData.length === 31) {
-      const sessionId = getSessionId();
-      submitBracket(sessionId, picksData)
-        .then(() => {
-          setSubmitted(true);
-          localStorage.setItem(`${STORE_KEY}_submitted`, "true");
-        })
-        .catch(console.error);
-    }
-  }, [phase, submitted, picksData]);
 
   const pick = useCallback(
     (side: "left" | "right") => {
@@ -128,16 +109,12 @@ export default function App() {
       setTimeout(() => setAnimPhase("exit"), 230);
 
       setTimeout(() => {
-        const newPick: Pick = {
-          session_id: getSessionId(),
-          round: roundIndex,
-          winner_id: winnerId,
-          loser_id: loserId,
-        };
+        const sessionId = getSessionId();
         setPicks(prev => [...prev, winnerId]);
-        setPicksData(prev => [...prev, newPick]);
         setAnimPhase(null);
         setAnimSide(null);
+        submitPick({ session_id: sessionId, round: roundIndex, winner_id: winnerId, loser_id: loserId })
+          .catch(console.error);
       }, 470);
 
       setTimeout(() => {
@@ -149,11 +126,8 @@ export default function App() {
 
   const reset = useCallback(() => {
     setPicks([]);
-    setPicksData([]);
-    setSubmitted(false);
     setView("game");
-    localStorage.removeItem(`${STORE_KEY}_submitted`);
-    // New session on reset
+    // New session on reset so picks don't collide with old ones
     localStorage.removeItem(`${STORE_KEY}_session`);
     getSessionId();
   }, []);

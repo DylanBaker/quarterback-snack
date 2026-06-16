@@ -11,11 +11,6 @@ class PickRequest(BaseModel):
     loser_id: int = Field(ge=0, le=31)
 
 
-class BracketSubmission(BaseModel):
-    session_id: uuid.UUID
-    picks: list[PickRequest]
-
-
 class PickResponse(BaseModel):
     id: uuid.UUID
     session_id: uuid.UUID
