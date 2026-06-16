@@ -85,7 +85,15 @@ export default function QBCard({
           flexShrink: 0,
         }}
       >
-        {/* Silhouette placeholder */}
+        {/* Player photo — falls back to silhouette if not found */}
+        <img
+          src={photoSrc}
+          alt={qb.name}
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+          onError={e => { (e.target as HTMLImageElement).style.display = "none"; }}
+        />
+
+        {/* Silhouette placeholder (shown when photo fails to load) */}
         <div
           style={{
             position: "absolute",
@@ -95,27 +103,11 @@ export default function QBCard({
             alignItems: "center",
             justifyContent: "flex-end",
             paddingBottom: "12%",
+            zIndex: -1,
           }}
         >
-          {/* Head */}
-          <div
-            style={{
-              width: "28%",
-              height: "28%",
-              borderRadius: "50%",
-              background: "var(--silhouette)",
-              marginBottom: "2%",
-            }}
-          />
-          {/* Shoulders */}
-          <div
-            style={{
-              width: "60%",
-              height: "36%",
-              borderRadius: "50% 50% 0 0",
-              background: "var(--silhouette)",
-            }}
-          />
+          <div style={{ width: "28%", height: "28%", borderRadius: "50%", background: "var(--silhouette)", marginBottom: "2%" }} />
+          <div style={{ width: "60%", height: "36%", borderRadius: "50% 50% 0 0", background: "var(--silhouette)" }} />
         </div>
 
         {/* Team chip */}
@@ -157,19 +149,6 @@ export default function QBCard({
           </span>
         </div>
 
-        <div
-          style={{
-            position: "absolute",
-            bottom: 6,
-            width: "100%",
-            textAlign: "center",
-            fontSize: 9,
-            color: "var(--text-faint)",
-            letterSpacing: ".08em",
-          }}
-        >
-          QB PHOTO
-        </div>
       </div>
 
       {/* Name */}

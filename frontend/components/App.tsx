@@ -163,7 +163,7 @@ export default function App() {
   const nameSize = isMobile ? 17 : 31;
   const vsSize = isMobile ? 46 : 90;
   const vsFontSize = isMobile ? 17 : 32;
-  const bracketH = isMobile ? 58 : 96;
+  const bracketH = isMobile ? 48 : 72;
   const heroSize = isMobile ? "32px" : "clamp(40px,6vw,58px)";
   const matchupGap = isMobile ? 8 : 30;
 
@@ -237,7 +237,7 @@ export default function App() {
           borderRadius: 16,
           padding: "16px 20px 14px",
           boxShadow: "0 12px 30px rgba(40,30,15,.1)",
-          marginBottom: 22,
+          marginBottom: 16,
         }}
       >
         <div
@@ -246,7 +246,7 @@ export default function App() {
             letterSpacing: ".28em",
             color: "var(--text-faint)",
             textTransform: "uppercase",
-            marginBottom: 10,
+            marginBottom: 8,
             fontFamily: "Space Grotesk, sans-serif",
             fontWeight: 600,
           }}
